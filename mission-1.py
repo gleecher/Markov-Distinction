@@ -78,15 +78,20 @@ class MarkovArtist:
     
 
 def main():
-    transition_matrix = make_transition_matrix()
+    val = int(input("Please enter an integer value for how much randomness \
+will be in the system (1 = very random, 5 and above = less random): "))
+    transition_matrix = make_transition_matrix(val)
     art_maker = MarkovArtist(transition_matrix)
     art_maker.draw_image(500, 500, 10)
    
 
-def make_transition_matrix():
+def make_transition_matrix(power):
     """
     Creates a 255 x 255 matrix where each value is the probability of going from
     the the index of row to the index of the column
+    
+         power (int): the power to which the difference between the current val
+         and the next val will be raised to
     """      
     transition_matrix = []
 
@@ -99,7 +104,7 @@ def make_transition_matrix():
             #larger power on line 96, examples of differnt powers are included
             
             transition_matrix[i].append(abs(i - j))
-            transition_matrix[i][j] = math.pow(transition_matrix[i][j], 1)
+            transition_matrix[i][j] = math.pow(transition_matrix[i][j], power)
             sum_val = sum_val + transition_matrix[i][j]
             
         for j in range(255):
