@@ -1,12 +1,8 @@
 """
-Learning Objectives
-- Let's remember Python!
-- What would a Markov chain look like in code?
-
-Example of an Markov Chain implementation in Python (using concepts we learned
-in 1101).
-
-Dependencies: numpy, scipy
+Gannon Leech
+02.28.21
+CSCI asdsa - Computational Creativity
+Mission 3: A Markov Distinction
 """
 
 import numpy as np
@@ -17,51 +13,55 @@ from PIL import Image, ImageDraw
 
 class MarkovArtist:
     def __init__(self, transition_matrix):
-        """Simulates an artisht that relies on a simple Markov chain.
+        """Simulates an artisht that relies on a  Markov chain.
            Args:
-                transition_matrix (dict): transition probabilities
-                num_squares (int): the number of squares in a row
-                num_rows (int): the number of rows
+                transition_matrix (list): transition probabilities
+
         """
         self.transition_matrix = transition_matrix
+        
+        #initializes the red, blue, and green values randomly
         self.redval = random.randint(0, 255)
         self.greenval = random.randint(0, 255)
         self.blueval = random.randint(0, 255)
 
     def calc_new_red(self):
-        """Simulates an artisht that relies on a simple Markov chain.
+        """
+        Decides what the next value for red should be based on the current val
         """        
         self.redval = np.random.choice(range(0,255), p = self.transition_matrix[self.redval])
         
     def calc_new_green(self):
-        """Simulates an artisht that relies on a simple Markov chain.
+        """
+        Decides what the next value for green should be based on the current val
         """          
         self.greenval = np.random.choice(range(0,255), p = self.transition_matrix[self.greenval])
         
     def calc_new_blue(self):
-        """Simulates an artisht that relies on a simple Markov chain.
+        """
+        Decides what the next value for blue should be based on the current val
         """          
         self.blueval = np.random.choice(range(0,255), p = self.transition_matrix[self.blueval])
 
 
-    def draw_image(self):
-        """Simulates an artisht that relies on a simple Markov chain.
+    def draw_image(self, width, height, offset):
+        """
+        Draws and displays the image of rows of squares filled by colors 
+        selected through a markov process
         """          
-        w = 500
-        h = 500
-        
-        img = Image.new("RGB", (w, h)) 
-        
-        for i in range(10, h - 10, 10): 
 
-            for j in range(10, w - 10, 10):
+        img = Image.new("RGB", (width, height)) 
+        
+        for i in range(offset, height - offset, offset): 
+
+            for j in range(offset, width - offset, offset):
                 self.calc_new_red()
                 self.calc_new_green()
                 self.calc_new_blue()
                 
                 color = (self.redval, self.greenval, self.blueval)
                 
-                shape = [(i, j), ( i + 10, j + 10)] 
+                shape = [(i, j), ( i + offset, j + offset)] 
                 img1 = ImageDraw.Draw(img)   
                 img1.rectangle(shape, fill = color)            
  
@@ -72,24 +72,33 @@ class MarkovArtist:
 def main():
     transition_matrix = make_transition_matrix()
     art_maker = MarkovArtist(transition_matrix)
-    art_maker.draw_image()
+    art_maker.draw_image(500, 500, 10)
    
 
 def make_transition_matrix():
-    """Simulates an artisht that relies on a simple Markov chain.
+    """
+    Creates a 255 x 255 matrix where each value is the probability of going from
+    the the index of row to the index of the column
     """      
     transition_matrix = []
 
     for i in range(255):
         sum_val= 0
         transition_matrix.append([])
-        for j in range(255):
+        for j in range(255):    
+            #Fills in the matrix so that the weight is highest for a value to
+            #become a nearby value. This affect can be increased by choosing a
+            #larger power on line 96, examples of differnt powers are included
+            
             transition_matrix[i].append(abs(i - j))
-            transition_matrix[i][j] = math.pow(transition_matrix[i][j], 4)
+            transition_matrix[i][j] = math.pow(transition_matrix[i][j], 1)
             sum_val = sum_val + transition_matrix[i][j]
+            
         for j in range(255):
-            transition_matrix[i][j] = float(transition_matrix[i][j] / sum_val)            
-                   
+            #Normalizes each index of the matrix so that it is a probability and 
+            #the sum of every row is 1.0
+            
+            transition_matrix[i][j] = float(transition_matrix[i][j] / sum_val)                 
     return transition_matrix
 
 
