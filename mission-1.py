@@ -1,8 +1,16 @@
 """
 Gannon Leech
 02.28.21
-CSCI asdsa - Computational Creativity
+CSCI 3725 - Computational Creativity
 Mission 3: A Markov Distinction
+
+Description: When run, this file creates and displayed piece of artwork using 
+a markov chain. The image should look like a bunch of little squares in a row, 
+where each color should be different, but consecutive squares in a row should 
+have on average similar colors, although this affect can be adjusted based on
+the powers used when creating the tranisition matrix.
+
+No Known Bugs
 """
 
 import numpy as np
