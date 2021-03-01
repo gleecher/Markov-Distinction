@@ -5,10 +5,10 @@ CSCI 3725 - Computational Creativity
 Mission 3: A Markov Distinction
 Title: 2304 Shades of RGB
 
-Description: When run, this file creates and displayed piece of artwork using 
-a markov chain. The image should look like a bunch of little squares in a row, 
-where each color should be different, but consecutive squares in a row should 
-have on average similar colors, although this affect can be adjusted based on
+Description: When run, this file creates and displays a piece of artwork using 
+a markov chain. The image should look like a bunch of little squares in columns, 
+where each color should be different, but consecutive squares in a column should 
+have on similar colors, although this affect can be adjusted based on
 the powers used when creating the tranisition matrix.
 
 No Known Bugs
@@ -18,6 +18,35 @@ import numpy as np
 import math
 import random
 from PIL import Image, ImageDraw
+
+def make_transition_matrix(power):
+    """
+    Creates a 255 x 255 matrix where each value is the probability of going from
+    the the index of row to the index of the column
+    
+         power (int): the power to which the difference between the current val
+         and the next val will be raised to
+    """      
+    transition_matrix = []
+
+    for i in range(255):
+        sum_val= 0
+        transition_matrix.append([])
+        for j in range(255):    
+            #Fills in the matrix so that the weight is highest for a value to
+            #become a nearby value. This affect can be increased by choosing a
+            #larger power on line 41 examples of differnt powers are included
+            
+            transition_matrix[i].append(abs(255 - i - j))
+            transition_matrix[i][j] = math.pow(transition_matrix[i][j], power)
+            sum_val = sum_val + transition_matrix[i][j]
+            
+        for j in range(255):
+            #Normalizes each index of the matrix so that it is a probability and 
+            #the sum of every row is 1.0
+            
+            transition_matrix[i][j] = float(transition_matrix[i][j] / sum_val)                 
+    return transition_matrix
 
 
 class MarkovArtist:
@@ -99,36 +128,6 @@ will be in the system (1 = very random, 5 and above = less random): "))
     art_maker = MarkovArtist(transition_matrix)
     art_maker.draw_image(500, 500, 10)
    
-
-def make_transition_matrix(power):
-    """
-    Creates a 255 x 255 matrix where each value is the probability of going from
-    the the index of row to the index of the column
-    
-         power (int): the power to which the difference between the current val
-         and the next val will be raised to
-    """      
-    transition_matrix = []
-
-    for i in range(255):
-        sum_val= 0
-        transition_matrix.append([])
-        for j in range(255):    
-            #Fills in the matrix so that the weight is highest for a value to
-            #become a nearby value. This affect can be increased by choosing a
-            #larger power on line 96, examples of differnt powers are included
-            
-            transition_matrix[i].append(abs(i - j))
-            transition_matrix[i][j] = math.pow(transition_matrix[i][j], power)
-            sum_val = sum_val + transition_matrix[i][j]
-            
-        for j in range(255):
-            #Normalizes each index of the matrix so that it is a probability and 
-            #the sum of every row is 1.0
-            
-            transition_matrix[i][j] = float(transition_matrix[i][j] / sum_val)                 
-    return transition_matrix
-
 
 if __name__ == "__main__":
     main()
