@@ -37,7 +37,7 @@ def make_transition_matrix(power):
             #become a nearby value. This affect can be increased by choosing a
             #larger power on line 41 examples of differnt powers are included
             
-            transition_matrix[i].append(abs(255 - i - j))
+            transition_matrix[i].append(abs(255 - abs(i - j)))
             transition_matrix[i][j] = math.pow(transition_matrix[i][j], power)
             sum_val = sum_val + transition_matrix[i][j]
             
@@ -51,7 +51,7 @@ def make_transition_matrix(power):
 
 class MarkovArtist:
     def __init__(self, transition_matrix):
-        """Simulates an artisht that relies on a  Markov chain.
+        """Simulates an artist that relies on a Markov chain.
            Args:
                 transition_matrix (list): transition probabilities
 
